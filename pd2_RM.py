@@ -1,18 +1,25 @@
 import turtle
 import math
 
-POINTS = 3
+POINTS = 7
 FULL_CIRCLE = 360
-HEIGHT = 100
+# HEIGHT = 100
+CENTER_RADIUS = 20
+RAY_LENGTH = CENTER_RADIUS + 60
 
 # funkcija zīmē vienādsānu trijstūri norādītajā virzienā (virzienu norāda grādos)
 # parametri: virziens grādos (atbilstoši Turtle), trijstūra augstums pikseļos un pamata garums pikseļos
-def draw_triangle(direction: int, star_angle: int, height: int):
+def use_angles(num_points: int=POINTS):
+    increment_angle = 360 / num_points
+    star_angle = increment_angle/5
+    for i in range(num_points):
+        draw_triangle(increment_angle * i, star_angle, RAY_LENGTH)
 
+def draw_triangle(direction: int, star_angle: int, height: int):
+    # risinājums, kurā zvaigzne tiek zīmēta no leņķiem, kas tiek secīgi grozīti
     STRAIGHT_ANGLE = 90
     t = turtle.Turtle()
     edge_length = height/math.cos(math.radians(star_angle))
-    print(direction, height, star_angle, edge_length)
     t.home()    # pozicionēties uz 0,0
     t.left(direction + STRAIGHT_ANGLE)
     t.penup()   
@@ -24,7 +31,7 @@ def draw_triangle(direction: int, star_angle: int, height: int):
     t.forward(edge_length)
     t.penup()
     t.setpos(tmp)
-    t.right(-2*star_angle)     # TODO - FIX THIS
+    t.right(-2*star_angle)
     t.pendown()
     t.forward(edge_length)
     t.penup()
@@ -32,49 +39,49 @@ def draw_triangle(direction: int, star_angle: int, height: int):
     t.hideturtle()
     return
 
-def test_star(points: int):
+# izmanto divas riņķa līnijas: iekšējo, uz kuras tiek vienmērīgi izvietoti punkti, 
+# kas atbilst uz zvaigznes iekšpusi vērsto leņķu virsotnēm (leņķis starp zvaigznes divām virsotnēm)
+# un ārējo, uz kā vienmērīgi tiek izvietoti punkti, kas atbilst zvaigznes virsotnēm 
+# Ciklā tiek vilkta lauzta līnija no punkta uz punktu.
+def use_lines(num_points: int=POINTS):
     
-    turtle.color('red', 'yellow')
-    turtle.begin_fill()
+    turtle.penup()                  
+    for i in range(num_points):
+        # formulas punktu izvietošanai uz riņķa līnijas aizgūtas no stackoverflow.com
+        angle_center = 2 * math.pi * i / num_points
+        angle_points = angle_center + math.pi / num_points
+        turtle.goto(CENTER_RADIUS * math.sin(angle_center), CENTER_RADIUS * math.cos(angle_center))
+        turtle.pendown()
+        turtle.goto(RAY_LENGTH * math.sin(angle_points), RAY_LENGTH * math.cos(angle_points))
+  
+    # savienot pēdējo virsotni ar starta pozīciju  
+    turtle.goto(CENTER_RADIUS * math.sin(0), CENTER_RADIUS * math.cos(0))
+    
+    turtle.hideturtle()
+    return
+
+# virsotņu skaita ievads. nodrošina prasību, ka virsotņu skaitam jābūt nepāra.
+def num_points_wrapper() -> int:
+    # abas zvaigznes zīmēšanas funkcijas (use_angles un use_lines) darbojas neatkarīgi no tā, vai virsotņu skaits ir pāra vai nepāra skaitlis.
+    # num_points_wrapper() izmantota tikai, lai nodrošinātu atbilstību uzdevuma prasībām.
     while True:
-        turtle.forward(200)
-        turtle.left(160)
-        print(turtle.pos(),abs(turtle.pos()))
-        if abs(turtle.pos()) < 1:
-            break
-    turtle.end_fill()
-    turtle.done()
-
-
+        n = input("\nIevadiet virsotņu skaitu (nepāra skaitlis >= 1): ")
+        try:
+            num = int(n)
+            num = num // 1  # atmetam decimāldaļas
+            if num % 2 == 1 and num > 0:
+                return num
+        except:
+            pass
+    return
 
 def main():
-    num_points = POINTS
-    increment_angle = 360 / num_points
-    base = HEIGHT       # aprēķināt
-    star_angle = increment_angle/6
-    # my_turtle = turtle.Turtle()
-    
-    for i in range(num_points):
-        print(increment_angle * i)
-        draw_triangle(increment_angle * i, star_angle, HEIGHT)
+    # num_points = POINTS
+    num_points = num_points_wrapper()
+
+    use_lines(num_points)
+    # use_angles(num_points)
         
-    
-    # scr = turtle.getscreen()
-    # test_star(POINTS)
-     
-    # my_turtle.forward(100)
-    # my_turtle.right(-90)    
-    # my_turtle.forward(100)
-    # my_turtle.home()
-    # my_turtle.goto(-50,50)
-    # my_turtle.color('blue','yellow')
-    # my_turtle.dot(50)
-    
-    # turtle2 = turtle.Turtle()
-    # turtle2.color('red','green')
-    # turtle2.right(45)
-    # turtle2.forward(133)
-    
     turtle.done()
 
 if __name__ == "__main__":
