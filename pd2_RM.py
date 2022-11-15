@@ -1,9 +1,8 @@
 import turtle
 import math
 
-POINTS = 5
+POINTS = 11
 FULL_CIRCLE = 360
-# HEIGHT = 100
 CENTER_RADIUS = 20
 RADIUS_DIFFERENCE = 60
 RAY_LENGTH = CENTER_RADIUS + RADIUS_DIFFERENCE
@@ -20,13 +19,14 @@ def use_angles(num_points: int=POINTS):
         draw_angle(increment_angle * i, star_angle, RAY_LENGTH)
 
 def draw_angle(direction: int, star_angle: int, height: int):
-# funkcija zīmē leņķi norādītajā virzienā (virzienu norāda grādos)
+# draw_angle zīmē leņķi norādītajā virzienā (virzienu norāda grādos)
 # parametri: leņķa bisektrises virziens grādos, leņķa platums grādos, leņķa bisektrises garums
 
     t = turtle.Turtle()
     # aprēķina stara malas garumu
     edge_length = (height - CENTER_RADIUS)/math.cos(math.radians(star_angle))
-    # atrod leņķa virsotnes koordinātes un aiziet uz tām
+
+    # atrod leņķa virsotnes koordinātes un nopozicionējas tajās
     t.home()    
     t.left(direction)
     t.penup()   
@@ -37,18 +37,16 @@ def draw_angle(direction: int, star_angle: int, height: int):
     t.left(180-star_angle)
     t.pendown()
     t.forward(edge_length)
-    t.penup()
     
-    # atgriežas leņķa virsotnē, zīmē otru  malu
+    # atgriežas leņķa virsotnē, zīmē otru malu
     t.setpos(tmp)       
     t.right(-2*star_angle)
-    t.pendown()
     t.forward(edge_length)
 
     t.hideturtle()      # novāc marķieri
     return
 
-# izmanto divas riņķa līnijas: iekšējo, uz kuras tiek vienmērīgi izvietoti punkti, 
+# use_lines izmanto divas riņķa līnijas: iekšējo, uz kuras tiek vienmērīgi izvietoti punkti, 
 # kas atbilst uz zvaigznes iekšpusi vērsto leņķu virsotnēm (leņķis starp zvaigznes divām virsotnēm)
 # un ārējo, uz kā vienmērīgi tiek izvietoti punkti, kas atbilst zvaigznes virsotnēm 
 # Ciklā tiek vilkta lauzta līnija no punkta uz punktu.
@@ -85,11 +83,11 @@ def num_points_wrapper() -> int:
     return
 
 def main():
-    num_points = POINTS
-    # num_points = num_points_wrapper()
+    # num_points = POINTS
+    num_points = num_points_wrapper()
 
-    # use_lines(num_points)
-    use_angles(num_points)
+    use_lines(num_points)
+    # use_angles(num_points)
         
     turtle.done()
 
