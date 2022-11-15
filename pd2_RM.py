@@ -1,42 +1,51 @@
 import turtle
 import math
 
-POINTS = 7
+POINTS = 5
 FULL_CIRCLE = 360
 # HEIGHT = 100
 CENTER_RADIUS = 20
-RAY_LENGTH = CENTER_RADIUS + 60
+RADIUS_DIFFERENCE = 60
+RAY_LENGTH = CENTER_RADIUS + RADIUS_DIFFERENCE
 
-# funkcija zīmē vienādsānu trijstūri norādītajā virzienā (virzienu norāda grādos)
-# parametri: virziens grādos (atbilstoši Turtle), trijstūra augstums pikseļos un pamata garums pikseļos
+# risinājums, kurā zvaigzne tiek zīmēta no leņķiem, kas tiek secīgi grozīti
+# 3- un 4-staru gadījumā vai nu paliek nelielas atstarpes starp staru pamatnēm,
+# vai arī, ja edge_length aprēķina tikai pēc height, stari turpinās zvaigznes centra iekšienē
+# izmanto palīgfunkciju draw_angle
+
 def use_angles(num_points: int=POINTS):
     increment_angle = 360 / num_points
     star_angle = increment_angle/5
     for i in range(num_points):
-        draw_triangle(increment_angle * i, star_angle, RAY_LENGTH)
+        draw_angle(increment_angle * i, star_angle, RAY_LENGTH)
 
-def draw_triangle(direction: int, star_angle: int, height: int):
-    # risinājums, kurā zvaigzne tiek zīmēta no leņķiem, kas tiek secīgi grozīti
-    STRAIGHT_ANGLE = 90
+def draw_angle(direction: int, star_angle: int, height: int):
+# funkcija zīmē leņķi norādītajā virzienā (virzienu norāda grādos)
+# parametri: leņķa bisektrises virziens grādos, leņķa platums grādos, leņķa bisektrises garums
+
     t = turtle.Turtle()
-    edge_length = height/math.cos(math.radians(star_angle))
-    t.home()    # pozicionēties uz 0,0
-    t.left(direction + STRAIGHT_ANGLE)
+    # aprēķina stara malas garumu
+    edge_length = (height - CENTER_RADIUS)/math.cos(math.radians(star_angle))
+    # atrod leņķa virsotnes koordinātes un aiziet uz tām
+    t.home()    
+    t.left(direction)
     t.penup()   
     t.forward(height)
-    
-    tmp = t.pos()
+    tmp = t.pos()       # virsotnes koordinātes saglabā
+
+    # zīmē vienu leņķa malu
     t.left(180-star_angle)
     t.pendown()
     t.forward(edge_length)
     t.penup()
-    t.setpos(tmp)
+    
+    # atgriežas leņķa virsotnē, zīmē otru  malu
+    t.setpos(tmp)       
     t.right(-2*star_angle)
     t.pendown()
     t.forward(edge_length)
-    t.penup()
-    t.home()
-    t.hideturtle()
+
+    t.hideturtle()      # novāc marķieri
     return
 
 # izmanto divas riņķa līnijas: iekšējo, uz kuras tiek vienmērīgi izvietoti punkti, 
@@ -76,11 +85,11 @@ def num_points_wrapper() -> int:
     return
 
 def main():
-    # num_points = POINTS
-    num_points = num_points_wrapper()
+    num_points = POINTS
+    # num_points = num_points_wrapper()
 
-    use_lines(num_points)
-    # use_angles(num_points)
+    # use_lines(num_points)
+    use_angles(num_points)
         
     turtle.done()
 
