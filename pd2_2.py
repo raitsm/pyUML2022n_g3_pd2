@@ -55,7 +55,7 @@ def plot_function(xmin: float, xmax: float, plot_color: str="red"):
 # intervāla garumam jābūt vismaz 150 vienību.
 def get_interval() -> tuple:
     MININT = 150        # intervāla minimālais garums
-    print("Ievadiet x vērtību intervāla robežass x1 un x2. Intervāla garumam jābūt vismaz 150.\n")
+    print("Ievadiet x vērtību intervāla robežas x1 un x2. Intervāla garumam jābūt vismaz 150.\n")
     while True:
         x1 = get_value("\nIevadiet x1: ")
         x2 = get_value("\nIevadiet x2: ")
