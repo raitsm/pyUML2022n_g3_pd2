@@ -3,42 +3,44 @@ XMIN = -100
 XMAX = 60
 APMALE = 40
 
+# funkcijas vērtību aprēķināšana
 def calculate_fn(x: float) -> float:
     y = x/2 + 5
     return y
 
-# draws axis and axis labels
+# parādīt koordinātu asis un apzīmējumus
 def draw_axis(l: float, axis_color: str="black"):
     t1 = turtle.Turtle(visible=False)
     t1.width(2)
     t1.color(axis_color)
     # draw y axis
     t1.penup()
-    t1.goto(0,l/2 + 20)
+    t1.goto(0,l + 20)
     t1.pendown()
-    t1.goto(0,-l/2 - 20)
+    t1.goto(0,-l - 20)
     # draw x axis
     t1.penup()
-    t1.goto(l/2+20,0)
+    t1.goto(l+20,0)
     t1.pendown()
-    t1.goto(-l/2-20,0)
+    t1.goto(-l-20,0)
     # add labels
     t1.penup()
     t1.setpos(4,0)
     t1.pendown()
     t1.write("0",font=("Arial", 10, "bold"))
     t1.penup()
-    t1.setpos(4,l/2)
+    t1.setpos(4,l)
     t1.pendown()
     t1.write("Y",font=("Arial", 10, "bold"))
     t1.penup()
-    t1.setpos(l/2,0)
+    t1.setpos(l,0)
     t1.pendown()
     t1.write("X",font=("Arial", 10, "bold"))
     
     return
 
-# plots the function
+# funkcijas grafika zīmēšana. Tā kā funkcija ir lineāra, pietiek aprēķināt y vērtību intervāla sākumā un beigās
+# un savienot šos punktus
 def plot_function(xmin: float, xmax: float, plot_color: str="red"):
     t = turtle.Turtle(visible=False)
     t.speed("fastest")
@@ -49,26 +51,49 @@ def plot_function(xmin: float, xmax: float, plot_color: str="red"):
     t.goto(xmax,calculate_fn(xmax))
     turtle.done()
 
-# takes user input with minimum and maximum values for x
-# nb, the range between min and max x must exceed 150.
+# funkcija x vērtību intervāla robežu ievadei
+# intervāla garumam jābūt vismaz 150 vienību.
 def get_interval() -> tuple:
-    pass
-
-# initial setup of turtle canvas
-def setup_screen(interval: float,bg_color: str="white"):
-    canvas_size = interval + APMALE*2
-    turtle.setup(width=canvas_size, height=canvas_size)
-    turtle.screensize(canvwidth=interval, canvheight=interval, bg=bg_color)
+    MININT = 150        # intervāla minimālais garums
+    print("Ievadiet x vērtību intervāla robežass x1 un x2. Intervāla garumam jābūt vismaz 150.\n")
+    while True:
+        x1 = get_value("\nIevadiet x1: ")
+        x2 = get_value("\nIevadiet x2: ")
+        if x1 > x2:
+            x1, x2 = x2, x1
+        if x2 - x1 >= MININT:
+            return(x1, x2)
     return
+
+# funkcija veselu skaitļu ievadīšanai
+def get_value(prompt: str) -> int:
+    while True:
+        tmp = input(prompt)
+        try:
+            t = int(tmp)
+            t = t // 1
+            return t
+        except:
+            pass
+    return
+
+# ekrāna konfigurēšana: laukums un fona krāsa
+def setup_screen(interval: float,bg_color: str="white"):
+    canvas_size = 2*interval + APMALE*4
+    turtle.setup(width=canvas_size, height=canvas_size)
+    turtle.screensize(canvwidth=canvas_size, canvheight=canvas_size, bg=bg_color)
+    return
+
 
 def main():
     # get x range
-    xmin = XMIN
-    xmax = XMAX
-    x_interval = xmax - xmin
+    # x_values = (XMIN,XMAX)
+    x_values = get_interval()
+    x_interval = x_values[1] - x_values[0]
     setup_screen(x_interval,"gray")
     draw_axis(x_interval,axis_color="black")
-    plot_function(xmin, xmax,plot_color="red")
+    plot_function(x_values[0], x_values[1],plot_color="red")
+    return
     
 if __name__ == "__main__":
     main()
