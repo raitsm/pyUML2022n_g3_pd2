@@ -1,11 +1,13 @@
 import turtle
 import math
 
-POINTS = 11
-FULL_CIRCLE = 360
-CENTER_RADIUS = 20
-RADIUS_DIFFERENCE = 60
-RAY_LENGTH = CENTER_RADIUS + RADIUS_DIFFERENCE
+POINTS = 11         
+FULL_CIRCLE = 360       
+# jo lielāka starpība starp RADIUS_DIFFERENCE un CENTER_RADIUS_BASE, jo izteiktāki stari zvaigznei
+# ja abi būs vienādi, tad, 3-staru zvaigzne izskatīsies līdzīga vienādmalu trijstūrim
+CENTER_RADIUS_BASE = 30     # zvaigznes iekšējais rādiuss
+RADIUS_DIFFERENCE = 60      # starpība starp zvaigznes iekšējo un ārējo rādiusu (faktiski stara garums)
+RAY_LENGTH = CENTER_RADIUS_BASE + RADIUS_DIFFERENCE     # garums no stara virsotnes līdz bāzes riņķa līnijas centram
 
 # risinājums, kurā zvaigzne tiek zīmēta no leņķiem, kas tiek secīgi grozīti
 # 3- un 4-staru gadījumā vai nu paliek nelielas atstarpes starp staru pamatnēm,
@@ -24,7 +26,7 @@ def draw_angle(direction: int, star_angle: int, height: int):
 
     t = turtle.Turtle()
     # aprēķina stara malas garumu
-    edge_length = (height - CENTER_RADIUS)/math.cos(math.radians(star_angle))
+    edge_length = (height - CENTER_RADIUS_BASE)/math.cos(math.radians(star_angle))
 
     # atrod leņķa virsotnes koordinātes un nopozicionējas tajās
     t.home()    
@@ -52,17 +54,20 @@ def draw_angle(direction: int, star_angle: int, height: int):
 # Ciklā tiek vilkta lauzta līnija no punkta uz punktu.
 def use_lines(num_points: int=POINTS):
     
-    turtle.penup()                  
+    calculated_radius = CENTER_RADIUS_BASE + num_points/2
+    calculated_ray_length = RAY_LENGTH + num_points
+    turtle.penup()
+    turtle.speed("fastest")                  
     for i in range(num_points):
         # formulas punktu izvietošanai uz riņķa līnijas aizgūtas no stackoverflow.com
         angle_center = 2 * math.pi * i / num_points
         angle_points = angle_center + math.pi / num_points
-        turtle.goto(CENTER_RADIUS * math.sin(angle_center), CENTER_RADIUS * math.cos(angle_center))
+        turtle.goto(calculated_radius * math.sin(angle_center), calculated_radius * math.cos(angle_center))
         turtle.pendown()
-        turtle.goto(RAY_LENGTH * math.sin(angle_points), RAY_LENGTH * math.cos(angle_points))
+        turtle.goto(calculated_ray_length * math.sin(angle_points), calculated_ray_length * math.cos(angle_points))
   
     # savienot pēdējo virsotni ar starta pozīciju  
-    turtle.goto(CENTER_RADIUS * math.sin(0), CENTER_RADIUS * math.cos(0))
+    turtle.goto(calculated_radius * math.sin(0), calculated_radius * math.cos(0))
     
     turtle.hideturtle()
     return
