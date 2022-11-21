@@ -91,7 +91,7 @@ def num_points_wrapper() -> int:
 
 # ekrāna konfigurācija: izmērs un fona krāsa
 def setup_screen(size: float,bg_color: str="white"):
-    turtle.setup(width=size, height=size)
+    turtle.setup(width=size, height=size, startx=MARGIN, starty=MARGIN)
     turtle.screensize(canvwidth=size*2, canvheight=size*2,bg=bg_color) #  
     return
 
