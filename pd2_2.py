@@ -1,7 +1,7 @@
 import turtle
 XMIN = -100
 XMAX = 60
-APMALE = 40
+MARGIN = 40
 
 # funkcijas vērtību aprēķināšana
 def calculate_fn(x: float) -> float:
@@ -79,8 +79,8 @@ def get_value(prompt: str) -> int:
 
 # ekrāna konfigurēšana: laukums un fona krāsa
 def setup_screen(interval: float,bg_color: str="white"):
-    canvas_size = 2*interval + APMALE*4
-    turtle.setup(width=canvas_size, height=canvas_size)
+    canvas_size = 2*interval + MARGIN*4
+    turtle.setup(width=canvas_size, height=canvas_size,startx=MARGIN,starty=MARGIN)
     turtle.screensize(canvwidth=canvas_size, canvheight=canvas_size, bg=bg_color)
     return
 
